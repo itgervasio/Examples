@@ -1,0 +1,41 @@
+ID: 12011
+
+parties:
+    
+    Rafael
+        roles: consumer 
+    
+    Imt
+        roles: provider 
+
+term groups:
+
+    Small_VM
+        Imt -> Rafael:cCpu in [1,2] #
+        Imt -> Rafael:ram in [1,1] #
+
+    Centralized_VM
+        Imt -> Rafael:cCpu in [2,4] #
+        Imt -> Rafael:ram in [8,16] #
+
+    Cluster
+        Imt -> Rafael:RT_delay in [0.0, 0.6] ms
+        [2,2] of Small_VM
+
+terms:
+    [1,1] of Cluster
+    Imt -> Rafael:interface has {OCCI,UCI} or {EC2}
+    Imt -> Rafael:replication is true
+
+guarantees:
+
+   on violation of Cluster :
+
+        if Cluster<1 then
+            notify
+            renegotiate
+
+   on violation of RT_delay :
+
+        if RT_delay>0.6 then
+            notify

@@ -1,0 +1,36 @@
+ID: 12012
+
+parties:
+
+    Imt
+        roles: provider, broker
+
+    Amazon
+        roles: provider 
+
+    roles: consumer
+
+
+term groups:
+
+    Small_VM
+        Imt -> consumer:cCpu in [1,2] #
+        Imt -> consumer:ram in [1,1] #
+
+    Centralized_VM
+        Imt -> consumer:cCpu in [2,4] #
+        Imt -> consumer:ram in [8,16] #
+
+    XLarge_VM
+        Amazon -> consumer:cCpu in [8,8] #
+        Amazon -> consumer:ram in [30,30] #
+        broker -> Amazon:cost in [0.56, 0.56] hour
+
+    Cluster
+        Imt -> consumer:RT_delay in [0.0, 0.6] ms
+        [2,2] of Small_VM
+
+terms:
+    [1,1] of Cluster
+    [2,2] of XLarge_VM
+    Imt -> consumer:interface has {EC2}
